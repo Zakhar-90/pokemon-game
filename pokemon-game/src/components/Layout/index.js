@@ -1,14 +1,18 @@
+import { Children } from 'react';
 import s from './style.module.css';
 
-const Layout = ({title, descr, urlBg, colorBg}) => {
-    const bg = urlBg ? `url(${urlBg})` : colorBg;
-    const styleBg = {
-        background: bg
-    };
-
+const Layout = ({title, urlBg, colorBg, children}) => {
+    const style = {};
+    if (urlBg) {
+        style.backgroundImage = `url(${urlBg})`;
+    }
+    if (colorBg) {
+        style.backgroundColor = colorBg;
+    }
+    
     return (
         <section
-            style={styleBg}
+            style={style}
             className={s.root}
         >
             <div className={s.wrapper}>
@@ -18,7 +22,7 @@ const Layout = ({title, descr, urlBg, colorBg}) => {
                         <span className={s.separator}></span>
                     </div>
                     <div className={s.desc, s.full}>
-                        <p>{descr}</p>
+                        {children}
                     </div>
                 </article>
             </div>
