@@ -162,9 +162,9 @@ const App = () => {
         title="Second layout"
         colorBg="#e2e2e2"
       >
-        <div className="flex">
+        <div className={s.flex}>
           {
-            POKEMONS.map(item => <PokemonCard key={item.id} {...item} />)
+            POKEMONS.map(item => <PokemonCard key={item.id} name={item.name} img={item.img} id={item.id} type={item.type} values={item.values} />)
           }
         </div>
       </Layout>
