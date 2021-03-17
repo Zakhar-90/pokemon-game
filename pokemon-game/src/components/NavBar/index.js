@@ -3,12 +3,10 @@ import classNames from 'classnames';
 
 import s from './style.module.css';
 
-const NavBar = ({onVisibleMenu}) => {
-    const [isActive, setActive] = useState(false);
+const NavBar = ({isActive, onVisibleMenu}) => {
 
     const handleClick = () => {
-        setActive(!isActive);
-        onVisibleMenu && onVisibleMenu(isActive);
+        onVisibleMenu && onVisibleMenu();
     } 
 
     return (

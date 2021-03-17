@@ -5,15 +5,16 @@ import NavBar from "../NavBar";
 const MenuHeader = () => {
     const [isOpenMenu, setOpenMenu] = useState(false);
 
-    const handleVisebleMenu = (isOpenMenu) => {
+    const handleVisebleMenu = () => {
         setOpenMenu(!isOpenMenu);
-        console.log("MenuHeader", isOpenMenu);
     };
 
     return (
         <>
             <Menu isActive={isOpenMenu} />
-            <NavBar onVisibleMenu={handleVisebleMenu}
+            <NavBar
+                isActive={isOpenMenu}
+                onVisibleMenu={handleVisebleMenu}
             />
         </>
     )
