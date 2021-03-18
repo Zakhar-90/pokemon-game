@@ -3,21 +3,23 @@ import classNames from 'classnames';
 
 import s from './style.module.css';
 
-const NavBar = ({isActive, onVisibleMenu}) => {
-
-    const handleClick = () => {
-        onVisibleMenu && onVisibleMenu();
-    } 
+const NavBar = ({isActive, bgActive = false, onVisibleMenu}) => {
+    console.log("isActive", isActive);
 
     return (
-        <nav className={s.root}>
+        <nav className={classNames(s.root,
+            {[s.bgActive] : bgActive}
+        )}>
             <div className={s.navWrapper}>
                 <p className={s.brand}>
                 LOGO
                 </p>
-                <a  onClick={handleClick} className={classNames(s.menuButton, {[s.active] : isActive})}>
+                <div  
+                    onClick={onVisibleMenu} 
+                    className={classNames(s.menuButton, {[s.active] : isActive})}
+                >
                     <span />
-                </a>
+                </div>
             </div>
         </nav>
     )
