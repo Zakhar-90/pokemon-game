@@ -1,34 +1,44 @@
 import classNames from 'classnames';
+import {Link} from 'react-router-dom';
 import s from './style.module.css';
 
 const MENU = [
     {
         title: 'HOME',
-        patch: '#welcome'
+        patch: '/'
     },
     {
         title: 'GAME',
-        patch: '#game'
+        patch: '/game'
     },
     {
         title: 'ABOUT',
-        patch: '#about'
+        patch: '/about'
     },
     {
         title: 'CONTACT',
-        patch: '#contact'
+        patch: '/contact'
     }
 ];
 
 const Menu = ({isActive}) => {
 
     return (
-        <div className={classNames(s.menuContainer, {[s.active] : isActive}, {[s.deactive] : isActive})}>
+        <div className={classNames(s.menuContainer, {
+            [s.active] : isActive === true,
+            [s.deactive] : isActive === false
+        })}>
             <div className={s.overlay} />
             <div className={s.menuItems}>
                 <ul>                
                     {
-                        MENU.map(item => <li><a href={item.patch}>{item.title}</a></li>)
+                        MENU.map(({title, patch}, index) => (
+                            <li key={index}>
+                                <Link to={patch}>
+                                    {title}
+                                </Link>
+                            </li>
+                        ))
                     }
                 </ul>
             </div>

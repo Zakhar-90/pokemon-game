@@ -29,9 +29,17 @@
     transform: rotateY(180deg);
 }
 
-/* TODO: This place where we should change :hover on .active */
 .pokemonCard.active {
-    transform: rotateY(0deg);
+    animation: flipFront 1000ms 300ms forwards;
+}
+
+@keyframes flipFront {
+    from {
+        transform: rotateY(180deg);
+    }
+    to {
+        transform: rotateY(0deg);
+    }
 }
 
 .cardFront,

@@ -2,11 +2,12 @@ import { useState } from 'react';
 import Menu from "../Menu";
 import NavBar from "../NavBar";
 
-const MenuHeader = () => {
-    const [isOpenMenu, setOpenMenu] = useState(false);
+const MenuHeader = ({ bgActive }) => {
+    const [isOpenMenu, setOpenMenu] = useState(null);
 
     const handleVisebleMenu = () => {
-        setOpenMenu(!isOpenMenu);
+        setOpenMenu(prevState => !prevState);
+        console.log("isOpen", isOpenMenu);
     };
 
     return (
@@ -14,6 +15,7 @@ const MenuHeader = () => {
             <Menu isActive={isOpenMenu} />
             <NavBar
                 isActive={isOpenMenu}
+                bgActive={bgActive}
                 onVisibleMenu={handleVisebleMenu}
             />
         </>
