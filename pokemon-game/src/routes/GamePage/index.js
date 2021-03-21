@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {useHistory} from 'react-router-dom';
 import Layout from './../../components/Layout';
 import PokemonCard from './../../components/PokemonCard';
+
+import database from './../../service/firebase';
 
 import s from './style.module.css';
 
@@ -147,14 +149,30 @@ const GamePage = () => {
         history.push('/');
     };
 
-    const activePokemons = POKEMONS.slice();
+    const [pokemons, setPokemons] = useState({});
 
-    const [isActive, setActive] = useState(activePokemons);
+    useEffect(() => {
+      database.ref('pokemons').once('value', (snapshot) => {
+        setPokemons(snapshot.val());
+      });
+    }, []);
 
-    const handleClickCard = (id) => {
-        console.log("GamePage id", id);
-        activePokemons.forEach( (item) => id == item.id ? (item.active = isActive) : item);
-        setActive(prev => !prev);
+    const handleClickCard = (id, pokKey) => {
+
+      setPokemons(prevState => {
+        return Object.entries(prevState).reduce((acc, item) => {
+            const pokemon = {...item[1]};
+            if (pokemon.id === id) {
+                pokemon.active = true;
+            };
+    
+            acc[item[0]] = pokemon;
+    
+            return acc;
+        }, {});
+      });
+
+      database.ref('pokemons/' + pokKey).update({active: pokemons[pokKey].active});
     }
 
     return (
@@ -168,16 +186,19 @@ const GamePage = () => {
             >
                 <div className={s.flex}>
                 {
-                    activePokemons.map((item) => <PokemonCard 
-                        key={item.id}
-                        name={item.name}
-                        img={item.img}
-                        id={item.id}
-                        type={item.type}
-                        values={item.values}
+                    Object.entries(pokemons).map(([key, {name, img, id, type, values, active}]) => (
+                      <PokemonCard 
+                        key={key}
+                        pokKey={key}
+                        name={name}
+                        img={img}
+                        id={id}
+                        type={type}
+                        values={values}
+                        isActive={active}
                         onClickCard={handleClickCard}
-                        isActive={item.active}
-                    />)
+                      />
+                    ))
                 }
                 </div>
             </Layout>
