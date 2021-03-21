@@ -143,11 +143,6 @@ const POKEMONS = [
   ];
 
 const GamePage = () => {
-    const history = useHistory();
-
-    const handleClick = () => {
-        history.push('/');
-    };
 
     const [pokemons, setPokemons] = useState({});
 
@@ -175,10 +170,17 @@ const GamePage = () => {
       database.ref('pokemons/' + pokKey).update({active: pokemons[pokKey].active});
     }
 
+    
+    const handleClickAdd = () => {
+      const newPokemon = Object.entries(pokemons)[Math.floor(Math.random() * 5)][1]
+      const newKey = database.ref().child('pokemons').push().key;
+      database.ref('pokemons/' + newKey).set(newPokemon);
+    };
+
     return (
         <>
-            <button onClick={handleClick}>
-                Home Page
+            <button onClick={handleClickAdd}>
+                Add New Pokemon
             </button>
             <Layout 
                 title="This is Game Page!"
