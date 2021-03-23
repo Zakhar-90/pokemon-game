@@ -1,216 +1,44 @@
-import { useState, useEffect } from 'react';
-import {useHistory} from 'react-router-dom';
-import Layout from './../../components/Layout';
-import PokemonCard from './../../components/PokemonCard';
+import { useRouteMatch, Switch, Route } from 'react-router-dom';
 
-import database from './../../service/firebase';
-
-import s from './style.module.css';
-
-const POKEMONS = [
-    {
-      "abilities": [
-        "keen-eye",
-        "tangled-feet",
-        "big-pecks"
-      ],
-      "stats": {
-        "hp": 63,
-        "attack": 60,
-        "defense": 55,
-        "special-attack": 50,
-        "special-defense": 50,
-        "speed": 71
-      },
-      "type": "flying",
-      "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/17.png",
-      "name": "pidgeotto",
-      "base_experience": 122,
-      "height": 11,
-      "id": 17,
-      "values": {
-        "top": "A",
-        "right": 2,
-        "bottom": 7,
-        "left": 5
-      }
-    },
-    {
-      "abilities": [
-        "intimidate",
-        "shed-skin",
-        "unnerve"
-      ],
-      "stats": {
-        "hp": 60,
-        "attack": 95,
-        "defense": 69,
-        "special-attack": 65,
-        "special-defense": 79,
-        "speed": 80
-      },
-      "type": "poison",
-      "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/24.png",
-      "name": "arbok",
-      "base_experience": 157,
-      "height": 35,
-      "id": 24,
-      "values": {
-        "top": 5,
-        "right": 9,
-        "bottom": "A",
-        "left": "A"
-      }
-    },
-    {
-      "abilities": [
-        "static",
-        "lightning-rod"
-      ],
-      "stats": {
-        "hp": 35,
-        "attack": 55,
-        "defense": 40,
-        "special-attack": 50,
-        "special-defense": 50,
-        "speed": 90
-      },
-      "type": "electric",
-      "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
-      "name": "pikachu",
-      "base_experience": 112,
-      "height": 4,
-      "id": 25,
-      "values": {
-        "top": 8,
-        "right": "A",
-        "bottom": 9,
-        "left": 6
-      }
-    },
-    {
-      "abilities": [
-        "overgrow",
-        "chlorophyll"
-      ],
-      "stats": {
-        "hp": 45,
-        "attack": 49,
-        "defense": 49,
-        "special-attack": 65,
-        "special-defense": 65,
-        "speed": 45
-      },
-      "type": "grass",
-      "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
-      "name": "bulbasaur",
-      "base_experience": 64,
-      "height": 7,
-      "id": 1,
-      "values": {
-        "top": 8,
-        "right": 4,
-        "bottom": 2,
-        "left": 7
-      }
-    },
-    {
-      "abilities": [
-        "blaze",
-        "solar-power"
-      ],
-      "stats": {
-        "hp": 39,
-        "attack": 52,
-        "defense": 43,
-        "special-attack": 60,
-        "special-defense": 50,
-        "speed": 65
-      },
-      "type": "fire",
-      "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png",
-      "name": "charmander",
-      "base_experience": 62,
-      "height": 6,
-      "id": 4,
-      "values": {
-        "top": 7,
-        "right": 6,
-        "bottom": 1,
-        "left": 4
-      }
-    }
-  ];
+import StartPage from './routes/Start';
+import BoardPage from './routes/Board';
+import FinishPage from './routes/Finish';
+import { PokemonContext } from '../../context/pokemonContext';
+import { useState } from 'react';
 
 const GamePage = () => {
+  const [selectedPokemons, setSelectedPokemons] = useState({});
 
-    const [pokemons, setPokemons] = useState({});
+  const match = useRouteMatch();
 
-    const getPokemons = () => {
-      database.ref('pokemons').once('value', (snapshot) => {
-        setPokemons(snapshot.val());
-      });
-    }
+  const handleSelectedPokemons = (key, pokemon) => {
+    setSelectedPokemons(prevState => {
+      if (prevstate[key]) {
+        const copyState = {...prevState};
+        delete copyState[key];
 
-    useEffect(() => {
-      getPokemons();
-    }, []);
+        return copyState;
+      }
 
-    const handleClickCard = (id) => {
+      return {
+        ...prevState,
+        [key]: pokemon
+      }
+    })
+  }
 
-      setPokemons(prevState => {
-        return Object.entries(prevState).reduce((acc, item) => {
-            const pokemon = {...item[1]};
-            if (pokemon.id === id) {
-                pokemon.active = !pokemon.active;
-            };
-    
-            acc[item[0]] = pokemon;
-
-            database.ref('pokemons/' + item[0]).set(pokemon);
-    
-            return acc;
-        }, {});
-      });
-
-      //database.ref('pokemons/' + pokKey).update({active: pokemons[pokKey].active});
-    }
-
-    
-    const handleClickAdd = () => {
-      const newPokemon = Object.entries(pokemons)[Math.floor(Math.random() * 5)][1];
-      const newKey = database.ref().child('pokemons').push().key;
-      database.ref('pokemons/' + newKey).set(newPokemon).then(() => getPokemons());
-    };
-
-    return (
-        <>
-            <button onClick={handleClickAdd}>
-                Add New Pokemon
-            </button>
-            <Layout 
-                title="This is Game Page!"
-                colorBg="#e2e2e2"
-            >
-                <div className={s.flex}>
-                {
-                    Object.entries(pokemons).map(([key, {name, img, id, type, values, active}]) => (
-                      <PokemonCard 
-                        key={key}
-                        name={name}
-                        img={img}
-                        id={id}
-                        type={type}
-                        values={values}
-                        isActive={active}
-                        onClickCard={handleClickCard}
-                      />
-                    ))
-                }
-                </div>
-            </Layout>
-        </>
-    );
+  return (
+    <PokemonContext.Provider value={{
+      pokemons: selectedPokemons,
+      onSelectedPokemons: handleSelectedPokemons
+    }}>
+      <Switch>
+          <Route path={`${match.path}/`} exact component={StartPage} />
+          <Route path={`${match.path}/board`} component={BoardPage} />
+          <Route path={`${match.path}/finish`} component={FinishPage} />
+      </Switch>
+    </PokemonContext.Provider>
+  );
 };
 
 export default GamePage;
