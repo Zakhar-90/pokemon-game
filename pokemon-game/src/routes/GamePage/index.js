@@ -146,35 +146,41 @@ const GamePage = () => {
 
     const [pokemons, setPokemons] = useState({});
 
-    useEffect(() => {
+    const getPokemons = () => {
       database.ref('pokemons').once('value', (snapshot) => {
         setPokemons(snapshot.val());
       });
+    }
+
+    useEffect(() => {
+      getPokemons();
     }, []);
 
-    const handleClickCard = (id, pokKey) => {
+    const handleClickCard = (id) => {
 
       setPokemons(prevState => {
         return Object.entries(prevState).reduce((acc, item) => {
             const pokemon = {...item[1]};
             if (pokemon.id === id) {
-                pokemon.active = true;
+                pokemon.active = !pokemon.active;
             };
     
             acc[item[0]] = pokemon;
+
+            database.ref('pokemons/' + item[0]).set(pokemon);
     
             return acc;
         }, {});
       });
 
-      database.ref('pokemons/' + pokKey).update({active: pokemons[pokKey].active});
+      //database.ref('pokemons/' + pokKey).update({active: pokemons[pokKey].active});
     }
 
     
     const handleClickAdd = () => {
-      const newPokemon = Object.entries(pokemons)[Math.floor(Math.random() * 5)][1]
+      const newPokemon = Object.entries(pokemons)[Math.floor(Math.random() * 5)][1];
       const newKey = database.ref().child('pokemons').push().key;
-      database.ref('pokemons/' + newKey).set(newPokemon);
+      database.ref('pokemons/' + newKey).set(newPokemon).then(() => getPokemons());
     };
 
     return (
@@ -191,7 +197,6 @@ const GamePage = () => {
                     Object.entries(pokemons).map(([key, {name, img, id, type, values, active}]) => (
                       <PokemonCard 
                         key={key}
-                        pokKey={key}
                         name={name}
                         img={img}
                         id={id}
