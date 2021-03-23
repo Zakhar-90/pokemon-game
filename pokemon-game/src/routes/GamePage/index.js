@@ -13,7 +13,7 @@ const GamePage = () => {
 
   const handleSelectedPokemons = (key, pokemon) => {
     setSelectedPokemons(prevState => {
-      if (prevstate[key]) {
+      if (prevState[key]) {
         const copyState = {...prevState};
         delete copyState[key];
 

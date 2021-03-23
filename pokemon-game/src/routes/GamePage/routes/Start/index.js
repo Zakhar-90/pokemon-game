@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import { FireBaseContext } from '../../../../context/firebaseContext';
 import { PokemonContext } from '../../../../context/pokemonContext';
 import Layout from './../../../../components/Layout';
@@ -10,6 +11,7 @@ const StartPage = () => {
 
     const firebase = useContext(FireBaseContext);
     const pokemonsContext = useContext(PokemonContext);
+    const history = useHistory();
     const [pokemons, setPokemons] = useState({});
 
     useEffect(() => {
@@ -33,38 +35,42 @@ const StartPage = () => {
         }))
     }
 
+    const handleStartGameClick = () => {
+        history.push('/game/board');
+    }
+
     return (
         <>
-            <button>
-                Start Game
-            </button>
-            <Layout 
-                title="This is Game Page!"
-                colorBg="#e2e2e2"
-            >
-                <div className={s.flex}>
-                {
-                    Object.entries(pokemons).map(([key, {name, img, id, type, values, selected}]) => (
-                        <PokemonCard 
-                            className={s.card}
-                            key={key}
-                            name={name}
-                            img={img}
-                            id={id}
-                            type={type}
-                            values={values}
-                            isActive={true}
-                            isSelected={selected}
-                            onClickCard={() => {
-                                if (Object.keys(pokemonsContext.pokemons).length < 5 || selected) {
-                                    handleChangeSelected(key)
-                                }
-                            }}
-                        />
-                    ))
-                }
-                </div>
-            </Layout>
+            <div className={s.buttonWrap}>
+                <button
+                    onClick={handleStartGameClick}
+                    disabled={Object.keys(pokemonsContext.pokemons).length < 5}
+                >
+                    Start Game
+                </button>
+            </div>
+            <div className={s.flex}>
+            {
+                Object.entries(pokemons).map(([key, {name, img, id, type, values, selected}]) => (
+                    <PokemonCard 
+                        className={s.card}
+                        key={key}
+                        name={name}
+                        img={img}
+                        id={id}
+                        type={type}
+                        values={values}
+                        isActive={true}
+                        isSelected={selected}
+                        onClickCard={() => {
+                            if (Object.keys(pokemonsContext.pokemons).length < 5 || selected) {
+                                handleChangeSelected(key)
+                            }
+                        }}
+                    />
+                ))
+            }
+            </div>
         </>
     );
 };
