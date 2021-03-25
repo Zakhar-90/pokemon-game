@@ -2,7 +2,6 @@ import { useState, useEffect, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { FireBaseContext } from '../../../../context/firebaseContext';
 import { PokemonContext } from '../../../../context/pokemonContext';
-import Layout from './../../../../components/Layout';
 import PokemonCard from './../../../../components/PokemonCard';
 
 import s from './style.module.css';
