@@ -2,16 +2,19 @@ import { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 import PokemonCard from "../../../../components/PokemonCard";
 import { PokemonContext } from "../../../../context/pokemonContext";
+import cn from 'classnames';
+
 import s from './style.module.css';
+import { FireBaseContext } from "../../../../context/firebaseContext";
 
 const FinishPage = () => {
-    const { pokemons } = useContext(PokemonContext);
-    const { player2 } = useContext(PokemonContext);
+    const { pokemons, player2, clearContext } = useContext(PokemonContext);
+    const [isSelected, setSelected] = useState(null);
+    const [selectedPokemon, setSelectedPokemon] = useState(null);
+
+    const firebase = useContext(FireBaseContext);
+    
     const history = useHistory();
-
-    const [player2Pokemons, setPlayer2Pokemons] = useState(player2);
-
-    console.log("pl2Cards", player2Pokemons);
 
     const [player1, setPlayer1] = useState(() => {
         return Object.values(pokemons).map(item => ({
@@ -20,10 +23,11 @@ const FinishPage = () => {
     });
 
     const handleEndGameClick = () => {
+        firebase.addPokemon(selectedPokemon);
+        clearContext({});
         history.push('/game');
     }
 
-    console.log("PokemonContext", pokemons);
     return (
         <div className={s.root}>
             <div className={s.playerOne}>
@@ -36,7 +40,6 @@ const FinishPage = () => {
                             id={item.id}
                             type={item.type}
                             values={item.values}
-                            minimize
                             isActive
                         />
                     ))
@@ -52,6 +55,15 @@ const FinishPage = () => {
             <div className={s.playerOne}>
                 {
                     player2.map((item) => (
+                        <div
+                            className={cn(s.cardBoard, {
+                                [s.selected]: isSelected === item.id
+                            })}
+                            onClick={() => {
+                                setSelected(item.id);
+                                setSelectedPokemon(item);
+                            }}
+                        >
                         <PokemonCard
                             key={item.id}
                             name={item.name}
@@ -59,9 +71,9 @@ const FinishPage = () => {
                             id={item.id}
                             type={item.type}
                             values={item.values}
-                            minimize
                             isActive
                         />
+                        </div>
                     ))
                 }
             </div>

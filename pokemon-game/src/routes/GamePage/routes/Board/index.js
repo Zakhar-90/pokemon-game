@@ -63,7 +63,6 @@ const BoardPage = () => {
     }
 
     const handleClickBoardPlate = async (position) => {
-        console.log('Choice', choiceCard);
         if (choiceCard) {
             const params = {
                 position,
@@ -80,8 +79,6 @@ const BoardPage = () => {
             });
 
             const request = await res.json();
-
-            console.log("request", request);
 
             if (choiceCard.player === 1) {
                 setPlayer1(prevState => prevState.filter(item => item.id !== choiceCard.id));

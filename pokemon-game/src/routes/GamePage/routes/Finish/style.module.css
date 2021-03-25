@@ -19,3 +19,11 @@
     margin: 50px 0;
     text-align: center;
 }
+
+.selected {
+    margin-top: -20px;
+}
+
+.cardBoard {
+    width: 100%;
+}
