@@ -24,7 +24,7 @@ const counterWin = (board, player1, player2) => {
 }
 
 const BoardPage = () => {
-    const { pokemons } = useContext(PokemonContext);
+    const { pokemons, setCardPlayer } = useContext(PokemonContext);
 
     const [board, setBoard] = useState([]);
     const [player1, setPlayer1] = useState(() => {
@@ -54,6 +54,8 @@ const BoardPage = () => {
                 possession: 'red'
             }))
         });
+
+        setCardPlayer(player2Request.data);
     }, []);
 
     if (Object.keys(pokemons).length === 0) {
@@ -108,6 +110,8 @@ const BoardPage = () => {
             } else {
                 alert("DRAW");
             }
+
+            history.push('/game/finish');
         }
     }, [steps]);
 

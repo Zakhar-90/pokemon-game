@@ -38,25 +38,9 @@ const StartPage = () => {
         history.push('/game/board');
     }
 
-    const handleNewPokemon = async () => {
-        const boardResponse = await fetch('https://reactmarathon-api.netlify.app/api/create-player');
-        const boardRequest = await boardResponse.json();
-        
-        const newPokemon = boardRequest.data[Math.floor(Math.random() * 5)];
-
-        firebase.addPokemon(newPokemon, () => {
-            firebase.getPokemonSoket((pokemons) => {
-                setPokemons(pokemons);
-            });
-    
-            return () => firebase.offPokemonSoket();
-        });
-    };
-
     return (
         <>
-            <div className={s.buttonWrap}>
-                
+            <div className={s.buttonWrap}>                
                 <button
                     onClick={handleStartGameClick}
                     disabled={Object.keys(pokemonsContext.pokemons).length < 5}
@@ -85,13 +69,6 @@ const StartPage = () => {
                     />
                 ))
             }
-            </div>
-            <div className={s.buttonWrap}>
-                <button
-                        onClick={handleNewPokemon}
-                    >
-                        New Pokemon
-                </button>
             </div>
         </>
     );
