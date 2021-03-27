@@ -1,0 +1,29 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: calc(100vw / 1.71);
+    position: relative;
+}
+
+.playerOne {
+    display: flex;
+    top: 4.3vw;
+    left: 5vw;
+    width: 90vw;
+    height: 20vw;
+}
+
+.title {
+    margin: 50px 0;
+    text-align: center;
+}
+
+.selected {
+    margin-top: -20px;
+}
+
+.cardBoard {
+    width: 100%;
+}
