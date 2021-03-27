@@ -53,3 +53,9 @@
     width: 18vw;
     height: 50.3vw;
 }
+
+.turnPlayer {
+    color: #050413;
+    font-size: 30px;
+    text-align: center;
+}
