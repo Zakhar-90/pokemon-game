@@ -27,3 +27,22 @@
 .cardBoard {
     width: 100%;
 }
+
+.win {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.win h2 {
+    font-size: 35px;
+}
+
+.win p {
+    font-size: 28px;
+}
+
+.disable {
+    display: none;
+}

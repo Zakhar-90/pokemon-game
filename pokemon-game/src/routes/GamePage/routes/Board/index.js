@@ -24,7 +24,7 @@ const counterWin = (board, player1, player2) => {
 }
 
 const BoardPage = () => {
-    const { pokemons, setCardPlayer } = useContext(PokemonContext);
+    const { pokemons, setCardPlayer, setWin } = useContext(PokemonContext);
 
     const [board, setBoard] = useState([]);
     const [player1, setPlayer1] = useState(() => {
@@ -101,10 +101,13 @@ const BoardPage = () => {
             const [count1, count2] = counterWin(board, player1, player2);
 
             if (count1 > count2) {
+                setWin("WIN");
                 alert("WIN");
             } else if (count1 < count2) {
+                setWin("LOSE");
                 alert("LOSE");
             } else {
+                setWin("DRAW");
                 alert("DRAW");
             }
 
