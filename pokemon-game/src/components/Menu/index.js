@@ -21,7 +21,7 @@ const MENU = [
     }
 ];
 
-const Menu = ({isActive}) => {
+const Menu = ({ isActive, onToPatch }) => {
 
     return (
         <div className={classNames(s.menuContainer, {
@@ -33,7 +33,10 @@ const Menu = ({isActive}) => {
                 <ul>                
                     {
                         MENU.map(({title, patch}, index) => (
-                            <li key={index}>
+                            <li 
+                                key={index}
+                                onClick={onToPatch}
+                            >
                                 <Link to={patch}>
                                     {title}
                                 </Link>
