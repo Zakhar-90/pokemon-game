@@ -8,7 +8,7 @@ import s from './style.module.css';
 import { FireBaseContext } from "../../../../context/firebaseContext";
 
 const FinishPage = () => {
-    const { pokemons, player2, clearContext } = useContext(PokemonContext);
+    const { pokemons, player2, clearContext, isWin } = useContext(PokemonContext);
     const [isSelected, setSelected] = useState(null);
     const [selectedPokemon, setSelectedPokemon] = useState(null);
 
@@ -30,6 +30,10 @@ const FinishPage = () => {
 
     return (
         <div className={s.root}>
+            <div className={s.win}>
+                <h2>You {isWin}!</h2>
+                <p className={cn({[s.disable]: isWin !== "WIN"})}>Pick yourself one Pokemon</p>
+            </div>
             <div className={s.playerOne}>
                 {
                     player1.map((item) => (
@@ -60,8 +64,10 @@ const FinishPage = () => {
                                 [s.selected]: isSelected === item.id
                             })}
                             onClick={() => {
-                                setSelected(item.id);
-                                setSelectedPokemon(item);
+                                if (isWin === "WIN") {
+                                    setSelected(item.id);
+                                    setSelectedPokemon(item);
+                                }
                             }}
                         >
                         <PokemonCard

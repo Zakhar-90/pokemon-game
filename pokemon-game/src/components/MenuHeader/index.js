@@ -7,12 +7,18 @@ const MenuHeader = ({ bgActive }) => {
 
     const handleVisebleMenu = () => {
         setOpenMenu(prevState => !prevState);
-        console.log("isOpen", isOpenMenu);
     };
+
+    const handleToPatch = () => {
+        setOpenMenu(prevState => !prevState);
+    }
 
     return (
         <>
-            <Menu isActive={isOpenMenu} />
+            <Menu 
+                isActive={isOpenMenu}
+                onToPatch={handleToPatch}
+            />
             <NavBar
                 isActive={isOpenMenu}
                 bgActive={bgActive}

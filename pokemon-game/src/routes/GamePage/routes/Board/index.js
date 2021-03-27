@@ -24,7 +24,7 @@ const counterWin = (board, player1, player2) => {
 }
 
 const BoardPage = () => {
-    const { pokemons, setCardPlayer } = useContext(PokemonContext);
+    const { pokemons, setCardPlayer, setWin } = useContext(PokemonContext);
 
     const [board, setBoard] = useState([]);
     const [player1, setPlayer1] = useState(() => {
@@ -36,6 +36,9 @@ const BoardPage = () => {
     const [player2, setPlayer2] = useState([]);
     const [choiceCard, setChoiceCard] = useState(null);
     const [steps, setSteps] = useState(0);
+    const [turnPlayer, setTurnPlayer] = useState(() => {
+        return Math.floor(Math.random()) + 1;
+    });
 
     const history = useHistory();
 
@@ -101,10 +104,13 @@ const BoardPage = () => {
             const [count1, count2] = counterWin(board, player1, player2);
 
             if (count1 > count2) {
+                setWin("WIN");
                 alert("WIN");
             } else if (count1 < count2) {
+                setWin("LOSE");
                 alert("LOSE");
             } else {
+                setWin("DRAW");
                 alert("DRAW");
             }
 
@@ -112,13 +118,17 @@ const BoardPage = () => {
         }
     }, [steps]);
 
+    //alert(`Starting game: player${turnPlayer}`);
+
     return (
         <div className={s.root}>
+            <div className={s.turnPlayer}>Player <b>{turnPlayer}</b> turn</div>
             <div className={s.playerOne}>
                 <PlayerBoard
                     player={1}
                     cards={player1}
                     onClickCard={(card) => setChoiceCard(card)}
+                    turnPlayer={turnPlayer}
                 />
             </div>
             <div className={s.board}>
@@ -127,7 +137,10 @@ const BoardPage = () => {
                         <div
                             key={item.position}
                             className={s.boardPlate}
-                            onClick={() => !item.card && handleClickBoardPlate(item.position)}
+                            onClick={() => {
+                                !item.card && handleClickBoardPlate(item.position);
+                                setTurnPlayer(turnPlayer === 1 ? 2 : 1);
+                            }}
                         >
                             {
                                 item.card && <PokemonCard {...item.card} isActive minimize />
@@ -141,6 +154,7 @@ const BoardPage = () => {
                     player={2}
                     cards={player2}
                     onClickCard={(card) => setChoiceCard(card)}
+                    turnPlayer={turnPlayer}
                 />
             </div>
         </div>

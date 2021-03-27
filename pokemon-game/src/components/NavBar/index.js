@@ -4,7 +4,6 @@ import classNames from 'classnames';
 import s from './style.module.css';
 
 const NavBar = ({isActive, bgActive = false, onVisibleMenu}) => {
-    console.log("isActive", isActive);
 
     return (
         <nav className={classNames(s.root,
